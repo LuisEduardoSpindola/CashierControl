@@ -3,10 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using CashierControl.Areas.Identity.Data;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("CashierControlContextConnection") ?? throw new InvalidOperationException("Connection string 'CashierControlContextConnection' not found.");
-
 builder.Services.AddDbContext<CashierControlContext>(options => options.UseSqlServer(connectionString));
-
-builder.Services.AddDefaultIdentity<Cashier>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<CashierControlContext>();
+builder.Services.AddDefaultIdentity<Cashier>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<CashierControlContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
