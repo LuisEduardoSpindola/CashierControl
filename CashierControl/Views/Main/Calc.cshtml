@@ -1,11 +1,8 @@
-﻿﻿@model MicroSource.Api.Models.Product
-
-
+﻿@model CashierControl.Models.Report
 
 @{
     ViewData["Title"] = "Calc";
 }
-
 
 <br></br>
 <br></br>
@@ -13,26 +10,26 @@
 <br></br>
 <div class="row justify-content-center align-items-center">
     <div class="col-md-6">
-        <form id="registerForm" method="post">
+        <form id="registerForm" method="post" asp-action="Calc">
             <h3 class="text-center">Calcular boleto</h3>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
             <div class="form-floating mb-3">
-                <input class="form-control" id="ValorBoleto" asp-for="BankSlipValue" autocomplete="username" aria-required="true" type="number" />
+                <input asp-for="BankSlipValue" class="form-control" id="ValorBoleto" asp-for="BankSlipValue" autocomplete="username" aria-required="true" type="number" />
                 <label asp-for="BankSlipValue">Valor do boleto</label>
                 <span class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-3">
                 <input class="form-control" id="ValorPago" autocomplete="username" aria-required="true" type="number" />
-                <label>Valor pago pelo cliente</label>
+                <label asp-for="ClientAmount">Valor pago pelo cliente</label>
                 <span class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-3">
-                <select class="form-control" id="Operacao" autocomplete="username" aria-required="true" type="number">
-                    <option value="" disabled selected></option>
+                <select asp-for="Operation" class="form-select" aria-label="Default select example">
+                    <option value="Não informado">Selecione a operação</option>
                     <option value="Saque">Saque</option>
                     <option value="Deposito">Deposito</option>
                     <option value="Pagamento">Pagamento</option>
@@ -71,4 +68,10 @@
             document.getElementById("TrocoCliente").value = troco.toFixed(2);
         }
     </script>
-</div>
+</div> 
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
