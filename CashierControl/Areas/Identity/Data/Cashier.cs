@@ -10,6 +10,6 @@ namespace CashierControl.Areas.Identity.Data;
 public class Cashier : IdentityUser
 {
     public string Name { get; set; }
-    public float Total {  get; set; }
+    public bool AccessCode { get; set; }
 }
 

@@ -1,4 +1,5 @@
 ﻿using CashierControl.Areas.Identity.Data;
+using CashierControl.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,8 @@ public class CashierControlContext : IdentityDbContext<Cashier>
         : base(options)
     {
     }
+
+    public DbSet<Report> Reports { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

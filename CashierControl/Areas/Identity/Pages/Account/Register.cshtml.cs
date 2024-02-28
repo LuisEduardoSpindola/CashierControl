@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using System.Data;
+using CashierControl.Constants;
 
 namespace CashierControl.Areas.Identity.Pages.Account
 {
@@ -30,13 +32,15 @@ namespace CashierControl.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<Cashier> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<Cashier> userManager,
             IUserStore<Cashier> userStore,
             SignInManager<Cashier> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +48,7 @@ namespace CashierControl.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -76,8 +81,11 @@ namespace CashierControl.Areas.Identity.Pages.Account
             public string Name { get; set; }
 
             [Required]
-            [Display(Name = "Total em caixa")]
-            public float Total { get; set; }
+            public bool AcessCode { get; set; }
+
+            [Required]
+            [Display(Name = "Código de acesso")]
+            public int Code { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -117,13 +125,21 @@ namespace CashierControl.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                if (Input.Code == 2207) 
+                {
+                    Input.AcessCode = true;
+                }
+                else 
+                {
+                    Input.AcessCode = false;
+                }
+
                 var user = new Cashier
                 {
                     UserName = Input.Email,
                     Name = Input.Name,
-                    Total = Input.Total,
+                    AccessCode = Input.AcessCode,
                 };
-
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -136,6 +152,17 @@ namespace CashierControl.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                    if (Input.AcessCode == true) 
+                    {
+                        var applicationRole = await _roleManager.FindByNameAsync(Roles.PurpleClient);
+
+                        if (applicationRole != null)
+                        {
+                            IdentityResult roleResult = await _userManager.AddToRoleAsync(user, applicationRole.Name);
+                        }
+                    }
+
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
