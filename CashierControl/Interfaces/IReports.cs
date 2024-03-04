@@ -11,5 +11,6 @@ namespace CashierControl.Interfaces
         Report GetReport(int id);
         void Delete(Report report);
         void DeleteById(int id);
+        void SaveChanges ();
     }
 }

@@ -38,7 +38,7 @@ namespace CashierControl.Repositories
 
         public void Delete(Report report)
         {
-            _controlContext.Reports.Remove(report);
+            report.Status = false;
             _controlContext.SaveChanges();
         }
 
@@ -46,6 +46,11 @@ namespace CashierControl.Repositories
         {
             var result = GetReport(id);
             Delete(result);
+        }
+
+        public void SaveChanges() 
+        {
+            SaveChanges();
         }
     }
 }

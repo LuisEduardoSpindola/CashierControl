@@ -21,8 +21,11 @@ namespace CashierControl.Controllers
         [Authorize(Roles = "PurpleClient")]
         public IActionResult Index()
         {
-            var result = _reportsServices.GetReports();
-            return View(result);
+            var user = _user.GetUserAsync(User).Result;
+            string sessionId = user.Id;
+
+            List<Report> Reports = _reportsServices.GetReports().Where(c => c.SellerId == sessionId).ToList();
+            return View(Reports);
         }
 
         [Authorize(Roles = "PurpleClient")]
@@ -38,8 +41,11 @@ namespace CashierControl.Controllers
             {
                 var user = _user.GetUserAsync(User).Result;
                 report.SellerName = user.Name;
+                report.SellerId = user.Id;
                 report.DateTime = DateTime.Now;
+                report.Status = true;
                 _reportsServices.Calc(report);
+
                 
                 return RedirectToAction("Index");
             }
@@ -49,6 +55,17 @@ namespace CashierControl.Controllers
             }
             
         }
+
+
+        [Authorize(Roles = "PurpleClient")]
+        public IActionResult Delete(int id)
+        {
+            var report = _reportsServices.GetReport(id);
+            report.Status = false;
+            _reportsServices.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
     }
 }
 

@@ -3,6 +3,7 @@
     public class Report
     {
         public int Id { get; set; }
+        public string SellerId { get; set; }
         public string SellerName { get; set; }
         public string Operation {  get; set; }
         public DateTime DateTime { get; set; }
