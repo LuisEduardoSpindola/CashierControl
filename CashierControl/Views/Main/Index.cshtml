@@ -6,11 +6,15 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Relatório de caixa</h2>
-    <a asp-action="Create" class="btn btn-outline-purple">Nova entrada</a>
+    <a asp-action="Calc" class="btn btn-outline-purple">Nova entrada</a>
 </div>
 
 <br></br>
 
+@* BanckSlipValue *@
+
+
+<h5>Relatório de pagamento</h5>
 <table class="table" style="border: 1px solid #6f42c1; background-color: transparent;">
     <thead>
         <tr>
@@ -35,25 +39,194 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
+    @{
+        foreach (var item in Model)
+        {
+            if (item.Operation == "Pagamento")
+            {
+                @* BanckSlipValue *@
+                <tbody>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SellerName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BankSlipValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ClientAmount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Operation)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateTime)
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        }
+    }
+</table>
+
+<br></br>
+
+@* CashOutFlow *@
+
+
+<h5>Relatório de Saque</h5>
+<table class="table" style="border: 1px solid #6f42c1; background-color: transparent;">
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SellerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BankSlipValue)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClientAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Operation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateTime)
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.SellerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CashOutflow)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Operation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTime)
+            </th>
+            <th>
+                Deletar
+            </th>
+            <th></th>
         </tr>
-}
-    </tbody>
+    </thead>
+    @{
+        foreach (var item in Model)
+        {
+            if (item.Operation == "Saque")
+            {
+                @* CashOutFlow *@
+                <tbody>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SellerName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CashOutflow)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Operation)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateTime)
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        }
+    }
+</table>
+
+<br></br>
+
+@* BoxOpen *@
+
+<h5>Relatório de abertura de caixa</h5>
+<table class="table" style="border: 1px solid #6f42c1; background-color: transparent;">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SellerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BoxOpen)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Operation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTime)
+            </th>
+            <th>
+                Deletar
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    @{
+        foreach (var item in Model)
+        {
+            if (item.Operation == "Abertura de caixa")
+            {
+                @* BoxOpen *@
+                <tbody>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SellerName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BoxOpen)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Operation)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateTime)
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        }
+    }
+</table>
+
+
+<br></br>
+
+@* Deposit *@
+
+
+<h5>Relatório de Depósitos</h5>
+<table class="table" style="border: 1px solid #6f42c1; background-color: transparent;">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SellerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DepositValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Operation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTime)
+            </th>
+            <th>
+                Deletar
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    @{
+        foreach (var item in Model)
+        {
+            if (item.Operation == "Deposito")
+            {
+                @* BoxOpen *@
+                <tbody>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SellerName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DepositValue)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Operation)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateTime)
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        }
+    }
 </table>

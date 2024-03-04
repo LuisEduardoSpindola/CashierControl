@@ -40,6 +40,7 @@ namespace CashierControl.Controllers
                 report.SellerName = user.Name;
                 report.DateTime = DateTime.Now;
                 _reportsServices.Calc(report);
+                
                 return RedirectToAction("Index");
             }
             else 
