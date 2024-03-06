@@ -19,14 +19,34 @@ namespace CashierControl.Controllers
         }
 
         [Authorize(Roles = "PurpleClient")]
-        public IActionResult Index()
+        public IActionResult Index(string startDate, string endDate)
         {
             var user = _user.GetUserAsync(User).Result;
             string sessionId = user.Id;
 
-            List<Report> Reports = _reportsServices.GetReports().Where(c => c.SellerId == sessionId).ToList();
-            return View(Reports);
+            // Converta as datas para o formato apropriado (opcional dependendo do formato usado pelo seu banco de dados)
+            DateTime? parsedStartDate = string.IsNullOrEmpty(startDate) ? (DateTime?)null : DateTime.Parse(startDate);
+            DateTime? parsedEndDate = string.IsNullOrEmpty(endDate) ? (DateTime?)null : DateTime.Parse(endDate);
+
+            // Obtenha todos os relatórios do usuário
+            var reports = _reportsServices.GetReports().Where(c => c.SellerId == sessionId && c.Status == true);
+
+            // Aplicar filtro por data, se fornecido
+            if (parsedStartDate != null && parsedEndDate != null)
+            {
+                reports = reports.Where(r => r.DateTime >= parsedStartDate && r.DateTime <= parsedEndDate);
+            }
+
+            List<Report> filteredReports = reports.ToList();
+
+            // Passar as datas de volta para a view
+            ViewBag.StartDate = startDate;
+            ViewBag.EndDate = endDate;
+
+            return View(filteredReports);
         }
+
+
 
         [Authorize(Roles = "PurpleClient")]
         public IActionResult Calc() 
@@ -46,7 +66,7 @@ namespace CashierControl.Controllers
                 report.Status = true;
                 _reportsServices.Calc(report);
 
-                
+
                 return RedirectToAction("Index");
             }
             else 

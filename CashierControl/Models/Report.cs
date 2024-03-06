@@ -23,8 +23,8 @@
         public float? DepositValue { get; set; }
 
         // Variables to calc BoxClosing
-        public float PositiveBoxClosing { get; set; }
-        public float NegativeBoxClosing { get; set; }
+        public float? DinamicPositiveBoxClosing { get; set; }
+        public float? DinamicNegativeBoxClosing { get; set; }
         
         // Delete Status
         public bool Status { get; set; }

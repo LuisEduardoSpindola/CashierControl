@@ -14,6 +14,7 @@ public class CashierControlContext : IdentityDbContext<Cashier>
     }
 
     public DbSet<Report> Reports { get; set; }
+    public DbSet<DayReport> DayReports { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
