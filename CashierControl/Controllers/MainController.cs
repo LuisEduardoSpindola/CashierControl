@@ -24,14 +24,11 @@ namespace CashierControl.Controllers
             var user = _user.GetUserAsync(User).Result;
             string sessionId = user.Id;
 
-            // Converta as datas para o formato apropriado (opcional dependendo do formato usado pelo seu banco de dados)
             DateTime? parsedStartDate = string.IsNullOrEmpty(startDate) ? (DateTime?)null : DateTime.Parse(startDate);
             DateTime? parsedEndDate = string.IsNullOrEmpty(endDate) ? (DateTime?)null : DateTime.Parse(endDate);
 
-            // Obtenha todos os relatórios do usuário
             var reports = _reportsServices.GetReports().Where(c => c.SellerId == sessionId && c.Status == true);
 
-            // Aplicar filtro por data, se fornecido
             if (parsedStartDate != null && parsedEndDate != null)
             {
                 reports = reports.Where(r => r.DateTime >= parsedStartDate && r.DateTime <= parsedEndDate);
@@ -39,12 +36,23 @@ namespace CashierControl.Controllers
 
             List<Report> filteredReports = reports.ToList();
 
-            // Passar as datas de volta para a view
+            // Calculate sums for each type of value
+            float bankSlipSum = filteredReports.Where(r => r.Operation == "Pagamento").Sum(r => r.BankSlipValue ?? 0);
+            float cashOutflowSum = filteredReports.Where(r => r.Operation == "Saque").Sum(r => r.CashOutflow ?? 0);
+            float boxOpenSum = filteredReports.Where(r => r.Operation == "Abertura de caixa").Sum(r => r.BoxOpen ?? 0);
+            float depositSum = filteredReports.Where(r => r.Operation == "Deposito").Sum(r => r.DepositValue ?? 0);
+
+            // Pass the sums to the view
             ViewBag.StartDate = startDate;
             ViewBag.EndDate = endDate;
+            ViewBag.BankSlipSum = bankSlipSum;
+            ViewBag.CashOutflowSum = cashOutflowSum;
+            ViewBag.BoxOpenSum = boxOpenSum;
+            ViewBag.DepositSum = depositSum;
 
             return View(filteredReports);
         }
+
 
 
 

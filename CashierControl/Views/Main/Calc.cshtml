@@ -1,147 +1,147 @@
-﻿@model CashierControl.Models.Report
+﻿    @model CashierControl.Models.Report
 
-@{
-    ViewData["Title"] = "Calc";
-}
+    @{
+        ViewData["Title"] = "Calc";
+    }
 
-<br></br>
-<br></br>
-<!-- Start Landing Page -->
-<br></br>
-<div class="row justify-content-center align-items-center">
-    <div class="col-md-6">
-        <form id="registerForm" method="post" asp-action="Calc">
-            <h3 class="text-center">Calcular boleto</h3>    
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    <br></br>
+    <br></br>
+    <!-- Start Landing Page -->
+    <br></br>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-6">
+            <form id="registerForm" method="post" asp-action="Calc">
+                <h3 class="text-center">Calcular boleto</h3>    
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
-            <div class="form-floating mb-3">
-                <select asp-for="Operation" class="form-select" aria-label="Default select example" onchange="toggleFields()">
-                    <option value="Não informado">Clique para selecionar a operação</option>
-                    <option value="Saque">Saque</option>
-                    <option value="Abertura de caixa">Abertura de caixa</option>
-                    <option value="Deposito">Deposito</option>
-                    <option value="Pagamento">Pagamento</option>
-                </select>
-                <label>Operação</label>
-                <span class="text-danger"></span>
-            </div>
-
-            <!-- Fields for "Pagamento" option -->
-            <div id="paymentFields" style="display: none;">
                 <div class="form-floating mb-3">
-                    <input asp-for="BankSlipValue" class="form-control" id="ValorBoletoPagamento" autocomplete="username" aria-required="true" type="number" />
-                    <label>Valor do boleto</label>
+                    <select asp-for="Operation" class="form-select" aria-label="Default select example" onchange="toggleFields()">
+                        <option value="Não informado">Clique para selecionar a operação</option>
+                        <option value="Saque">Saque</option>
+                        <option value="Abertura de caixa">Abertura de caixa</option>
+                        <option value="Deposito">Deposito</option>
+                        <option value="Pagamento">Pagamento</option>
+                    </select>
+                    <label>Operação</label>
                     <span class="text-danger"></span>
                 </div>
 
-                <div class="form-floating mb-3">
-                    <input asp-for="ClientAmount" class="form-control" id="ValorPago" autocomplete="username" aria-required="true" type="number" />
-                    <label>Valor pago pelo cliente</label>
-                    <span class="text-danger"></span>
+                <!-- Fields for "Pagamento" option -->
+                <div id="paymentFields" style="display: none;">
+                    <div class="form-floating mb-3">
+                        <input asp-for="BankSlipValue" class="form-control" id="ValorBoletoPagamento" autocomplete="username" aria-required="true" type="number" />
+                        <label>Valor do boleto</label>
+                        <span class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="ClientAmount" class="form-control" id="ValorPago" autocomplete="username" aria-required="true" type="number" />
+                        <label>Valor pago pelo cliente</label>
+                        <span class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Transshipment" class="form-control" id="TrocoCliente" autocomplete="username" aria-required="true" type="number" disabled />
+                        <label>Troco do cliente</label>
+                        <span class="text-danger"></span>
+                    </div>
+
+                    <div style="margin-bottom: 10px">
+                        <button id="calcularSubmit" type="button" class="w-100 btn btn-outline-purple" onclick="calcularTroco()">Calcular</button>
+                    </div>
                 </div>
 
-                <div class="form-floating mb-3">
-                    <input asp-for="Transshipment" class="form-control" id="TrocoCliente" autocomplete="username" aria-required="true" type="number" disabled />
-                    <label>Troco do cliente</label>
-                    <span class="text-danger"></span>
+                <!-- Fields for "Saque" option -->
+                <div id="withdrawalField" style="display: none;">
+                    <div class="form-floating mb-3">
+                        <input asp-for="CashOutflow" class="form-control" id="ValorBoletoSaque" autocomplete="username" aria-required="true" type="number" />
+                        <label>Valor a ser retirado</label>
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Fields for "Abertura de caixa" option -->
+                <div id="OpenField" style="display: none;">
+                    <div class="form-floating mb-3">
+                        <input asp-for="BoxOpen" class="form-control" id="ValorAberturaCaixa" autocomplete="username" aria-required="true" type="number" />
+                        <label>Valor de abertura</label>
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Fields for "Deposito" option -->
+                <div id="depositField" style="display: none;">
+                    <div class="form-floating mb-3">
+                        <input asp-for="DepositValue" class="form-control" id="ValorDeposito" autocomplete="username" aria-required="true" type="number" />
+                        <label>Valor a ser Depositado</label>
+                        <span class="text-danger"></span>
+                    </div>
                 </div>
 
                 <div style="margin-bottom: 10px">
-                    <button id="calcularSubmit" type="button" class="w-100 btn btn-outline-purple" onclick="calcularTroco()">Calcular</button>
+                    <button id="salvarSubmit" type="submit" class="w-100 btn btn-outline-purple">Salvar</button>
                 </div>
-            </div>
+            </form>
+        </div>
 
-            <!-- Fields for "Saque" option -->
-            <div id="withdrawalField" style="display: none;">
-                <div class="form-floating mb-3">
-                    <input asp-for="CashOutflow" class="form-control" id="ValorBoletoSaque" autocomplete="username" aria-required="true" type="number" />
-                    <label>Valor a ser retirado</label>
-                    <span class="text-danger"></span>
-                </div>
-            </div>
+        <script>
+            function calcularTroco() {
+                // Obtém os valores dos campos
+                var valorBoleto = parseFloat(document.getElementById("ValorBoletoPagamento").value) || 0;
+                var valorPago = parseFloat(document.getElementById("ValorPago").value) || 0;
 
-            <!-- Fields for "Abertura de caixa" option -->
-            <div id="OpenField" style="display: none;">
-                <div class="form-floating mb-3">
-                    <input asp-for="BoxOpen" class="form-control" id="ValorAberturaCaixa" autocomplete="username" aria-required="true" type="number" />
-                    <label>Valor de abertura</label>
-                    <span class="text-danger"></span>
-                </div>
-            </div>
+                // Calcula o troco
+                var troco = valorPago - valorBoleto;
 
-            <!-- Fields for "Deposito" option -->
-            <div id="depositField" style="display: none;">
-                <div class="form-floating mb-3">
-                    <input asp-for="DepositValue" class="form-control" id="ValorDeposito" autocomplete="username" aria-required="true" type="number" />
-                    <label>Valor a ser Depositado</label>
-                    <span class="text-danger"></span>
-                </div>
-            </div>
+                if (troco < 0) {
+                    alert("Valor pago pelo cliente menor que o valor do boleto! ");
+                }
 
-            <div style="margin-bottom: 10px">
-                <button id="salvarSubmit" type="submit" class="w-100 btn btn-outline-purple">Salvar</button>
-            </div>
-        </form>
+                // Atualiza o campo "Troco do cliente"
+                document.getElementById("TrocoCliente").value = troco.toFixed(2);
+            }
+
+
+            function toggleFields() {
+                var operationSelect = document.getElementById("Operation");
+                var paymentFields = document.getElementById("paymentFields");
+                var withdrawalField = document.getElementById("withdrawalField");
+                var openField = document.getElementById("OpenField");
+                var depositField = document.getElementById("depositField");
+
+                if (operationSelect.value === "Pagamento") {
+                    paymentFields.style.display = "block";
+                    withdrawalField.style.display = "none";
+                    openField.style.display = "none";
+                    depositField.style.display = "none";
+                } else if (operationSelect.value === "Saque") {
+                    paymentFields.style.display = "none";
+                    withdrawalField.style.display = "block";
+                    openField.style.display = "none";
+                    depositField.style.display = "none";
+                } else if (operationSelect.value === "Abertura de caixa") {
+                    paymentFields.style.display = "none";
+                    withdrawalField.style.display = "none";
+                    openField.style.display = "block";
+                    depositField.style.display = "none";
+                } else if (operationSelect.value === "Deposito") {
+                    paymentFields.style.display = "none";
+                    withdrawalField.style.display = "none";
+                    openField.style.display = "none";
+                    depositField.style.display = "block";
+                } else {
+                    paymentFields.style.display = "none";
+                    withdrawalField.style.display = "none";
+                    openField.style.display = "none";
+                    depositField.style.display = "none";
+                }
+            }
+        </script>
     </div>
 
-    <script>
-        function calcularTroco() {
-            // Obtém os valores dos campos
-            var valorBoleto = parseFloat(document.getElementById("ValorBoletoPagamento").value) || 0;
-            var valorPago = parseFloat(document.getElementById("ValorPago").value) || 0;
-
-            // Calcula o troco
-            var troco = valorPago - valorBoleto;
-
-            if (troco < 0) {
-                alert("Valor pago pelo cliente menor que o valor do boleto! ");
-            }
-
-            // Atualiza o campo "Troco do cliente"
-            document.getElementById("TrocoCliente").value = troco.toFixed(2);
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
-
-
-        function toggleFields() {
-            var operationSelect = document.getElementById("Operation");
-            var paymentFields = document.getElementById("paymentFields");
-            var withdrawalField = document.getElementById("withdrawalField");
-            var openField = document.getElementById("OpenField");
-            var depositField = document.getElementById("depositField");
-
-            if (operationSelect.value === "Pagamento") {
-                paymentFields.style.display = "block";
-                withdrawalField.style.display = "none";
-                openField.style.display = "none";
-                depositField.style.display = "none";
-            } else if (operationSelect.value === "Saque") {
-                paymentFields.style.display = "none";
-                withdrawalField.style.display = "block";
-                openField.style.display = "none";
-                depositField.style.display = "none";
-            } else if (operationSelect.value === "Abertura de caixa") {
-                paymentFields.style.display = "none";
-                withdrawalField.style.display = "none";
-                openField.style.display = "block";
-                depositField.style.display = "none";
-            } else if (operationSelect.value === "Deposito") {
-                paymentFields.style.display = "none";
-                withdrawalField.style.display = "none";
-                openField.style.display = "none";
-                depositField.style.display = "block";
-            } else {
-                paymentFields.style.display = "none";
-                withdrawalField.style.display = "none";
-                openField.style.display = "none";
-                depositField.style.display = "none";
-            }
-        }
-    </script>
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
