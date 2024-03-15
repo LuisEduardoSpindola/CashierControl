@@ -20,6 +20,9 @@ namespace CashierControl.Models
         [Display(Name = "Valor do boleto")]
         public float? BankSlipValue { get; set; }
 
+        [Display(Name = "QTDA de boletos")]
+        public int? BankSlipsQuantity { get; set; }
+
         [Display(Name = "Valor pago pelo cliente")]
         public float? ClientAmount { get; set; }
 

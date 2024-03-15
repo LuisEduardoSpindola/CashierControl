@@ -31,18 +31,17 @@ namespace CashierControl.Controllers
 
             if (parsedStartDate != null && parsedEndDate != null)
             {
-                reports = reports.Where(r => r.DateTime >= parsedStartDate && r.DateTime <= parsedEndDate);
+                parsedEndDate = parsedEndDate?.AddDays(1);
+                reports = reports.Where(r => r.DateTime >= parsedStartDate && r.DateTime < parsedEndDate);
             }
 
             List<Report> filteredReports = reports.ToList();
 
-            // Calculate sums for each type of value
             float bankSlipSum = filteredReports.Where(r => r.Operation == "Pagamento").Sum(r => r.BankSlipValue ?? 0);
             float cashOutflowSum = filteredReports.Where(r => r.Operation == "Saque").Sum(r => r.CashOutflow ?? 0);
             float boxOpenSum = filteredReports.Where(r => r.Operation == "Abertura de caixa").Sum(r => r.BoxOpen ?? 0);
             float depositSum = filteredReports.Where(r => r.Operation == "Deposito").Sum(r => r.DepositValue ?? 0);
 
-            // Pass the sums to the view
             ViewBag.StartDate = startDate;
             ViewBag.EndDate = endDate;
             ViewBag.BankSlipSum = bankSlipSum;
@@ -52,6 +51,7 @@ namespace CashierControl.Controllers
 
             return View(filteredReports);
         }
+
 
 
 
