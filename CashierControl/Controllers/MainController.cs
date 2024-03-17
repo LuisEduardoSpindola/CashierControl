@@ -41,6 +41,7 @@ namespace CashierControl.Controllers
             float cashOutflowSum = filteredReports.Where(r => r.Operation == "Saque").Sum(r => r.CashOutflow ?? 0);
             float boxOpenSum = filteredReports.Where(r => r.Operation == "Abertura de caixa").Sum(r => r.BoxOpen ?? 0);
             float depositSum = filteredReports.Where(r => r.Operation == "Deposito").Sum(r => r.DepositValue ?? 0);
+            float totalEntrada = (bankSlipSum + boxOpenSum + depositSum) - cashOutflowSum;
 
             ViewBag.StartDate = startDate;
             ViewBag.EndDate = endDate;
@@ -48,6 +49,8 @@ namespace CashierControl.Controllers
             ViewBag.CashOutflowSum = cashOutflowSum;
             ViewBag.BoxOpenSum = boxOpenSum;
             ViewBag.DepositSum = depositSum;
+            ViewBag.TotalEntrada = totalEntrada;
+
 
             return View(filteredReports);
         }
