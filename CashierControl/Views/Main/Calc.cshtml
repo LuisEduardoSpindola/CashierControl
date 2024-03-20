@@ -17,9 +17,8 @@
 
                 <div class="form-floating mb-3">
                     <select asp-for="Operation" class="form-select" aria-label="Default select example" onchange="toggleFields()">
-                        <option value="Não informado">Clique para selecionar a operação</option>
+                        <option value="Abertura de caixa" selected>Abertura de caixa</option>
                         <option value="Saque">Saque</option>
-                        <option value="Abertura de caixa">Abertura de caixa</option>
                         <option value="Deposito">Deposito</option>
                         <option value="Pagamento">Pagamento</option>
                     </select>
@@ -27,10 +26,9 @@
                     <span class="text-danger"></span>
                 </div>
 
-                <!-- Fields for "Pagamento" option -->
             <div id="paymentFields" style="display: none;">
                 <div class="row">
-                    <!-- Lado Esquerdo -->
+
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="BankSlipsQuantity" class="form-control" id="QuantidadeBoleto" autocomplete="username" aria-required="true" type="number" onchange="createDynamicFields()" />
@@ -44,7 +42,7 @@
                             <button id="calcularSubmit" type="button" class="w-100 btn btn-outline-purple" onclick="calcularSomaBoletos()">Somar Boletos</button>
                         </div>
                     </div>
-                    <!-- Lado Direito -->
+
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="BankSlipValue" class="form-control" id="ValorBoletoPagamento" autocomplete="username" aria-required="true" type="number" />
@@ -73,9 +71,6 @@
                     </div>
                 </div>
             </div>
-
-
-                <!-- Fields for "Saque" option -->
                 <div id="withdrawalField" style="display: none;">
                     <div class="form-floating mb-3">
                         <input asp-for="CashOutflow" class="form-control" id="ValorBoletoSaque" autocomplete="username" aria-required="true" type="number" />
@@ -87,7 +82,6 @@
                     </div>
                 </div>
 
-                <!-- Fields for "Abertura de caixa" option -->
                 <div id="OpenField" style="display: none;">
                     <div class="form-floating mb-3">
                         <input asp-for="BoxOpen" class="form-control" id="ValorAberturaCaixa" autocomplete="username" aria-required="true" type="number" />
@@ -99,7 +93,6 @@
                     </div>
                 </div>
 
-                <!-- Fields for "Deposito" option -->
                 <div id="depositField" style="display: none;">
                     <div class="form-floating mb-3">
                         <input asp-for="DepositValue" class="form-control" id="ValorDeposito" autocomplete="username" aria-required="true" type="number" />
@@ -143,18 +136,16 @@
     }
 
     function calcularTroco() {
-        // Obtém os valores dos campos
         var valorBoleto = parseFloat(document.getElementById("ValorBoletoPagamento").value) || 0;
         var valorPago = parseFloat(document.getElementById("ValorPago").value) || 0;
 
-        // Calcula o troco
         var troco = valorPago - valorBoleto;
 
         if (troco < 0) {
             alert("Valor pago pelo cliente menor que o valor do boleto! ");
+            location.reload(true);
         }
 
-        // Atualiza o campo "Troco do cliente"
         document.getElementById("TrocoCliente").value = troco.toFixed(2);
     }
 
@@ -192,6 +183,9 @@
             depositField.style.display = "none";
         }
     }
+
+    toggleFields();
+
 </script>
 
 
